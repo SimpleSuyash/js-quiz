@@ -1,0 +1,64 @@
+#time{
+    float: right;
+}
+
+header{
+    font-size: clamp(0.7rem, calc(1vw + 0.3rem), 1.1rem );
+}
+
+body{
+    
+}
+main{
+    font-size: clamp(0.8rem, calc(1vw + 0.5rem), 1.3rem);
+    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+    max-width: 67rem;
+    min-height: 70vh;
+    margin-inline: auto;
+    border: 1px solid black;
+    padding-inline: 2rem;
+    padding-block: 1rem;
+    border-radius: 0.3rem;
+    margin-block: 3rem;
+    background-color: rgb(240, 240, 240);
+}
+.instruction{
+    font-size: 1em ;
+    margin-top: 5rem;;
+    text-align: center;
+    padding-inline: 1rem;
+    /* border: 1px solid green; */
+}
+h1{
+    font-size: 1.5em;
+}
+
+button, a{
+    background-color: rgb(138, 43, 227);
+    color: #fff;
+    border-radius: 0.3rem;
+    padding-block: 0.3rem;
+    padding-inline: 1rem;
+    border: none;
+    box-shadow: 0.1rem 0.1rem 0.5rem 0 rgba(138, 43, 227, 0.5);
+}
+button:hover, a:hover{
+    background-color: rgb(166, 43, 43, 0.8);
+    box-shadow: 0.1rem 0.1rem 0.5rem 0 rgba(166, 43, 43, 0.5);
+    cursor: pointer;
+}.question{
+    /* border: 1px solid red; */
+    width: 60%;
+    margin: auto;
+    font-size: 1.5em;
+    font-weight: bold;
+}
+a{
+    font-size: 0.7em;
+    font-weight: normal;
+    display: block;
+    width: 10em;
+}
+a + a{
+    margin-top: 0.5em;
+}
