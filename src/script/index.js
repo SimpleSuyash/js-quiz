@@ -55,6 +55,7 @@ function display(element, toDisplay = true){
 window.onload = function (){
     display(questionSection, false);
     display(resultSection, false);
+    display(tallySection, false);
 };
 
 function startQuiz() {
@@ -113,9 +114,10 @@ function showNextQuestion(){
     if(currentQuestionNum < questions.length){
         showQuestions();
     }else{
+        showTally();
         
-        alert("tally section to be added");
     }
+    
 }
 
 function showResult(string){
@@ -130,6 +132,11 @@ function showResult(string){
     resultSection.appendChild(result);
 }
 
+function showTally(){
 
+    display(questionSection, false);
+    display(tally);
+    
+}
 
 

@@ -14,7 +14,7 @@
     <div class = "quizBoard">
     <header>
         <a> View high scores</a>
-        <span id = "time">Time: 0</span>
+        <output id = "time">Time: 0</output>
     </header>
     <main>
         <section class = "instruction" id = "instruction">
@@ -24,7 +24,17 @@
             <button type = "button" onclick = "startQuiz()">Start Quiz</button>
         </section>
         <section class = "question" id = "quizQuestion"></section>
-
+        <form class="tally" id="tally">
+            <h1>All done!</h1>
+            <p>Your final score is: <output id ="score"> 22</output>.</p>
+            
+            <div>
+                <label for ="initials">Enter initials: </label>
+                <input type = "text" id = "initials">
+                <input type="submit" value="Submit">
+            </div>
+            
+        </form>
         <section class = "result" id = "quizResult"></section>
 
         

@@ -29,7 +29,7 @@ main{
 .instruction{
     text-align: center;
 }
-button, .button{
+button, .button, input[type="submit"]{
     font-size: 1.5rem;
     background-color: rgb(138, 43, 227);
     color: #fff;
@@ -39,7 +39,7 @@ button, .button{
     border: none;
     box-shadow: 0.1rem 0.1rem 0.5rem 0 rgba(138, 43, 227, 0.5);
 }
-button:hover, .button:hover{
+button:hover, .button:hover, input[type="submit"]:hover{
     background-color: rgb(166, 43, 43, 0.8);
     box-shadow: 0.1rem 0.1rem 0.5rem 0 rgba(166, 43, 43, 0.5);
     cursor: pointer;
@@ -69,4 +69,22 @@ button:hover, .button:hover{
     font-style: italic;
     opacity: 0.5;
     margin-block: 2em;
+}
+
+.tally{
+    font-size: 1.2em;
+}
+.tally input[type = "text"]{
+    font-size: 1.4em;
+    margin-inline: 0.5em;;
+}
+.tally input[type = "text"]:hover{
+    background-color: rgba(255, 255, 255, 0.5);
+}
+.tally h1{
+    font-size: 1.5em;
+}
+.tally div{
+    display: flex;
+    align-items: center;
 }
