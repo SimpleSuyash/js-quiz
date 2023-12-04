@@ -26,35 +26,64 @@ const q5 = {
 };
 
 const questions = [q1, q2, q3, q4, q5];
-const instructionSection = get(instruction);
-const questionSection = get(question);
-const resultSection = get(result);
-const tallySection = get(tally);
-const timer = get(time);
-
-window.onload = function (){
-    questionSection.style.display = "none";
-    resultSection.style.display = "none";
-    tallySection.style.display = "none";
-};
-
-function startQuiz() {
-   
-    instructionSection.style.display = "none";
-    countdown();
-    showQuestions();
-}
+const instructionSection = get("instruction");
+const questionSection = get("quizQuestion");
+let currentQuestionNum = 0;
 
 
-
-
-function create(createMe, type ="element"){
+function create(createMe, type = ""){
     if(type == "node"){
-        return document.createTextNode("createMe");
+        return document.createTextNode(createMe);
     }else{
-        return document.createElement("createMe");
+        return document.createElement(createMe);
     }
 }
 function get(id){
-    return document.getElementById("id");
+    return document.getElementById(id);
 }
+
+window.onload = function (){
+    
+ 
+};
+function startQuiz() {
+   instructionSection.style.display = "none";
+    showQuestions();
+}
+
+function showQuestions() {
+    let paragraph, div;
+    //starts from question number 1
+    currentQuestionNum++;
+    
+    
+    paragraph = create("p");
+    div = create("div");
+    div.className = "optionsWrapper";
+
+    for (let i = 0; i <= questions.length; i++) {
+        //question number begins from 1
+        if (currentQuestionNum == (i+1)) {
+            paragraph.innerText = questions[i].question;
+            questionSection.appendChild(paragraph);
+            questionSection.appendChild(div);
+
+            //getting possible answers to the question
+            for (let j in questions[i].options) {
+                let button;
+                button = create("a");
+                button.className ="button";
+                /*
+                button are named like : 1. option A
+                */
+                button.innerText = (++j) + ". " + questions[i].options[--j];
+                div.appendChild(button);
+            }
+            // if we find a match already, don't loop
+            //there is one one match at a time
+            break;
+        }
+    }
+}
+
+
