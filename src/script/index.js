@@ -28,6 +28,8 @@ const q5 = {
 const questions = [q1, q2, q3, q4, q5];
 const instructionSection = get("instruction");
 const questionSection = get("quizQuestion");
+const resultSection = get("quizResult");
+const tallySection = get("tally");
 let currentQuestionNum = 0;
 
 
@@ -41,14 +43,25 @@ function create(createMe, type = ""){
 function get(id){
     return document.getElementById(id);
 }
+function display(element, toDisplay = true){
+    if(!toDisplay){
+        element.style.display = "none";
+    }else{
+        element.style.display = "block";
+    }
+    
+}
 
 window.onload = function (){
-    
- 
+    display(questionSection, false);
+    display(resultSection, false);
 };
+
 function startQuiz() {
-   instructionSection.style.display = "none";
+   
     showQuestions();
+    display(instructionSection, false);
+    display(questionSection);
 }
 
 function showQuestions() {
@@ -82,8 +95,13 @@ function showQuestions() {
                 */
                 button.innerText = (++j) + ". " + questions[i].options[--j];
                 div.appendChild(button);
-                button.addEventListener("click", showNextQuestion);
-
+                button.addEventListener("click", () => {
+                    let answerChosen = button.innerText;
+                    showNextQuestion();
+                    display(resultSection);
+                    setTimeout( () => display(resultSection, false), 50000);
+                    showResult(answerChosen)
+                });
             }
             // if we find a match already, don't loop
             //there is one one match at a time
@@ -91,10 +109,27 @@ function showQuestions() {
         }
     }
 }
-
 function showNextQuestion(){
-    showQuestions();
+    if(currentQuestionNum < questions.length){
+        showQuestions();
+    }else{
+        
+        alert("tally section to be added");
+    }
 }
+
+function showResult(string){
+    let result;
+    let correctAnswer = questions[currentQuestionNum -1].answer;
+    if(string.includes(correctAnswer)){
+        result = create("Correct!" , "node");
+    }else{
+        result = create("Wrong!", "node");
+    }
+    resultSection.innerText = "";
+    resultSection.appendChild(result);
+}
+
 
 
 
