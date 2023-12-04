@@ -29,18 +29,36 @@ main{
 .instruction{
     text-align: center;
 }
-button{
+button, .button{
+    font-size: 1.5rem;
     background-color: rgb(138, 43, 227);
     color: #fff;
     border-radius: 0.3rem;
     padding-block: 0.3rem;
-    padding-inline: 1.5rem;
+    padding-inline: 0.8rem;
     border: none;
     box-shadow: 0.1rem 0.1rem 0.5rem 0 rgba(138, 43, 227, 0.5);
 }
-button:hover{
+button:hover, .button:hover{
     background-color: rgb(166, 43, 43, 0.8);
     box-shadow: 0.1rem 0.1rem 0.5rem 0 rgba(166, 43, 43, 0.5);
     cursor: pointer;
     color:#fff;
+}
+.button{
+    font-weight: normal;
+    min-width: 8em;
+}
+
+.button + .button{
+    margin-top: 0.5em;
+}
+.optionsWrapper{/* div wrapping options */
+    display: flex;
+    flex-direction: column;
+    width: fit-content;
+}
+.question{
+    font-size: 1.69em;
+    font-weight: bold;
 }
