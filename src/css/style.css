@@ -62,3 +62,11 @@ button:hover, .button:hover{
     font-size: 1.69em;
     font-weight: bold;
 }
+.result {
+    font-size: 1.2em;
+    border-top: 1px solid black;
+    padding-top: 0.5rem;
+    font-style: italic;
+    opacity: 0.5;
+    margin-block: 2em;
+}
