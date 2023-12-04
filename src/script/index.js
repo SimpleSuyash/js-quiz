@@ -65,6 +65,10 @@ function showQuestions() {
         //question number begins from 1
         if (currentQuestionNum == (i+1)) {
             paragraph.innerText = questions[i].question;
+            //make questionSection empty before showing new question
+            if(questionSection.innerHTML!=""){
+                questionSection.innerText = "";
+            }
             questionSection.appendChild(paragraph);
             questionSection.appendChild(div);
 
@@ -78,6 +82,8 @@ function showQuestions() {
                 */
                 button.innerText = (++j) + ". " + questions[i].options[--j];
                 div.appendChild(button);
+                button.addEventListener("click", showNextQuestion);
+
             }
             // if we find a match already, don't loop
             //there is one one match at a time
@@ -85,5 +91,10 @@ function showQuestions() {
         }
     }
 }
+
+function showNextQuestion(){
+    showQuestions();
+}
+
 
 
