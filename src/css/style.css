@@ -1,4 +1,4 @@
-#time{
+#timer{
     float: right;
 }
 
@@ -87,4 +87,7 @@ button:hover, .button:hover, input[type="submit"]:hover{
 .tally div{
     display: flex;
     align-items: center;
+}
+.tally output{
+    font-style: italic;
 }
