@@ -30,6 +30,11 @@ const instructionSection = get("instruction");
 const questionSection = get("quizQuestion");
 const resultSection = get("quizResult");
 const tallySection = get("tally");
+const timer = get("timer");
+const score =get("score");
+
+let timeLeft = 15 * questions.length; //75seconds
+let timerInterval;
 let currentQuestionNum = 0;
 
 
@@ -59,7 +64,7 @@ window.onload = function (){
 };
 
 function startQuiz() {
-   
+    beginCountdown();
     showQuestions();
     display(instructionSection, false);
     display(questionSection);
@@ -98,14 +103,15 @@ function showQuestions() {
                 div.appendChild(button);
                 button.addEventListener("click", () => {
                     let answerChosen = button.innerText;
-                    showNextQuestion();
+                    
                     display(resultSection);
-                    setTimeout( () => display(resultSection, false), 50000);
                     showResult(answerChosen)
+                    setTimeout( () => display(resultSection, false), 50000);
+                    showNextQuestion();
                 });
             }
             // if we find a match already, don't loop
-            //there is one one match at a time
+            //there is only one match at a time
             break;
         }
     }
@@ -115,7 +121,6 @@ function showNextQuestion(){
         showQuestions();
     }else{
         showTally();
-        
     }
     
 }
@@ -124,19 +129,45 @@ function showResult(string){
     let result;
     let correctAnswer = questions[currentQuestionNum -1].answer;
     if(string.includes(correctAnswer)){
+        //alert(string + " contains " + correctAnswer);
         result = create("Correct!" , "node");
     }else{
+        //alert(string + " doesn't contain " + correctAnswer);
         result = create("Wrong!", "node");
+        timeLeft = timeLeft - 15;
     }
     resultSection.innerText = "";
     resultSection.appendChild(result);
 }
 
 function showTally(){
-
     display(questionSection, false);
     display(tally);
-    
+    //stopCountDown();
+    setTimeout(() => stopCountDown(), 1000);
+     if (timeLeft <= 0){
+        score.innerText = 0;
+    }else {
+        score.innerText = timeLeft -1;
+    }
 }
+
+function beginCountdown() {
+    timerInterval = setInterval(function(){
+        timeLeft--;
+        
+        if( timeLeft <= 0){
+            timeLeft = 0;
+            showTally();
+        }
+        timer.innerText = "Time: " + timeLeft;
+    }, 1000);
+}
+
+function stopCountDown(){
+    clearInterval(timerInterval);
+}
+
+
 
 
