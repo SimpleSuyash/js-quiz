@@ -26,17 +26,49 @@ const q5 = {
 };
 
 const questions = [q1, q2, q3, q4, q5];
-const instructionSection = get("instruction");
-const questionSection = get("quizQuestion");
-const resultSection = get("quizResult");
-const tallySection = get("tally");
+
+const headerSection = get("header-section");
+const instructionSection = get("instruction-section");
+const questionSection = get("question-section");
+const resultSection = get("result-section");
+const tallySection = get("tally-section");
+const leaderboardSection = get("leaderboard-section");
+
 const timer = get("timer");
-const score =get("score");
+const score = get("score");
+const initial = get("initials");
+const error = get("error");
+const highScore = get("high-score");
 
 let timeLeft = 15 * questions.length; //75seconds
 let timerInterval;
 let currentQuestionNum = 0;
+let intervalPaused = false;
 
+/* 
+ section to hide and show are:
+ headerSection
+ instructionSection
+ questionSection
+ resultSection
+ tallySection
+ leaderboardSection
+
+*/
+let toBeHiddenElements =[];
+let toBeVisibleElements = [];
+
+// let highScores = [];
+
+
+
+
+window.onload = function (){
+    toBeHiddenElements =[questionSection, resultSection, resultSection , tallySection, leaderboardSection ];
+    toBeVisibleElements =[headerSection, instructionSection];
+    showThese(toBeVisibleElements);
+    hideThese(toBeHiddenElements);
+};
 
 function create(createMe, type = ""){
     if(type == "node"){
@@ -48,26 +80,35 @@ function create(createMe, type = ""){
 function get(id){
     return document.getElementById(id);
 }
+
 function display(element, toDisplay = true){
-    if(!toDisplay){
-        element.style.display = "none";
-    }else{
+    if(toDisplay){
         element.style.display = "block";
+    }else{
+        element.style.display = "none";
     }
-    
 }
 
-window.onload = function (){
-    display(questionSection, false);
-    display(resultSection, false);
-    display(tallySection, false);
-};
-
+function showThese(theArray) {
+    // alert("cheking");
+    for (let element of theArray) {
+        display(element);
+    }
+}
+function hideThese(theArray) {
+    for (let element of theArray) {
+        display(element, false);
+    }
+}
 function startQuiz() {
-    beginCountdown();
+    beginInterval();
     showQuestions();
-    display(instructionSection, false);
-    display(questionSection);
+ 
+    toBeHiddenElements =[instructionSection, resultSection , tallySection, leaderboardSection ];
+    toBeVisibleElements =[headerSection, questionSection];
+    showThese(toBeVisibleElements);
+    hideThese(toBeHiddenElements);
+    // display(instructionSection, false);
 }
 
 function showQuestions() {
@@ -105,8 +146,8 @@ function showQuestions() {
                     let answerChosen = button.innerText;
                     
                     display(resultSection);
-                    showResult(answerChosen)
                     setTimeout( () => display(resultSection, false), 50000);
+                    showResult(answerChosen);
                     showNextQuestion();
                 });
             }
@@ -122,8 +163,33 @@ function showNextQuestion(){
     }else{
         showTally();
     }
-    
 }
+function beginInterval() {
+    timerInterval = setInterval(function(){
+        if(!intervalPaused){
+            timeLeft--;
+        }
+        if( timeLeft <= 0){
+            timeLeft = 0;
+            showTally();
+        }
+        timer.innerText = "Time: " + timeLeft;
+    }, 1000);
+}
+function stopInterval(){
+    clearInterval(timerInterval);
+}
+
+
+function resumeInterval(){
+    intervalPaused = false;
+}
+
+function pauseInterval(){
+    intervalPaused = true;
+}
+   
+
 
 function showResult(string){
     let result;
@@ -140,34 +206,88 @@ function showResult(string){
     resultSection.appendChild(result);
 }
 
+
 function showTally(){
-    display(questionSection, false);
-    display(tally);
-    //stopCountDown();
-    setTimeout(() => stopCountDown(), 1000);
+
+    toBeHiddenElements =[instructionSection, questionSection, resultSection , leaderboardSection ];
+    toBeVisibleElements =[headerSection, tallySection];
+    showThese(toBeVisibleElements);
+    hideThese(toBeHiddenElements);
+
+    stopInterval();
+    //setTimeout(() => stopCountDown(), 1000);
      if (timeLeft <= 0){
         score.innerText = 0;
     }else {
-        score.innerText = timeLeft -1;
+        score.innerText = timeLeft;
     }
 }
 
-function beginCountdown() {
-    timerInterval = setInterval(function(){
-        timeLeft--;
-        
-        if( timeLeft <= 0){
-            timeLeft = 0;
-            showTally();
+
+function submitHighScore() {
+
+    let newScore = score.value;
+    
+    let newUser = initial.value;
+    if(validateInitials(newUser)){
+        display(error, false);
+        if (localStorage.length > 0) {
+            for (let i = 0; i < localStorage.length; i++) {
+                let aKey = localStorage.key(i);
+                if (newUser === aKey) {
+                    //when current user is already saved
+                    //and his current score is higer, update the score
+                    if (newScore > localStorage.getItem(aKey)) {
+                        localStorage.setItem(aKey, newScore);
+                    }
+                } else {
+                    //when the current user is not found in the record
+                    //it must be new, so add it
+                    localStorage.setItem(newUser, newScore);
+                }
+                break;
+            }
+    
+        } else {//if localStorage is empty, just add the item
+            localStorage.setItem(newUser, newScore);
         }
-        timer.innerText = "Time: " + timeLeft;
-    }, 1000);
+        showLeaderboard();
+    }else{
+        initial.value = "";
+        display(error);
+        setTimeout( () => display(error, false), 1000);
+    }
+}
+function validateInitials(initial){
+    let regex = /^[a-zA-Z]+$/; 
+    
+    if(initial.trim().length == 0){
+        return false;
+    }else if(!regex.test(initial)){
+        return false;
+    }else{
+        return true;
+    }
+    
 }
 
-function stopCountDown(){
-    clearInterval(timerInterval);
+function clearHighScores(){
+    localStorage.clear();
+    showLeaderboard();
 }
 
+function showLeaderboard(){
+    toBeHiddenElements =[instructionSection, headerSection, questionSection, resultSection , tallySection ];
+    toBeVisibleElements =[leaderboardSection];
+    showThese(toBeVisibleElements);
+    hideThese(toBeHiddenElements);
 
-
+    let text="";
+    for (let i = 0; i < localStorage.length; i++){
+        let aKey = localStorage.key(i);
+        let aValue = localStorage.getItem(aKey);
+        text += (i + 1) + ". " + aKey + " - " + aValue + "\n"; 
+    }
+    highScore.value = text.toUpperCase();
+}
 

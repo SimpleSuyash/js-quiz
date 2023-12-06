@@ -11,37 +11,50 @@
 </head>
 
 <body>
-    <div class = "quizBoard">
-    <header>
-        <a> View high scores</a>
-        <output id = "timer">Time: 0</output>
-    </header>
-    <main>
-        <section class = "instruction" id = "instruction">
-            <h1>Coding Quiz Challenge</h1>
-            <p>Try to answer the following code-related questions within the time limit.<br>
-                Keep in mind that incorrect answers will penalize your score/time<br> by ten seconds!</p>
-            <button type = "button" onclick = "startQuiz()">Start Quiz</button>
-        </section>
-        <section class = "question" id = "quizQuestion"></section>
-        <form class="tally" id="tally">
-            <h1>All done!</h1>
-            <p>Your final score is: <output id ="score"> </output>.</p>
-            
-            <div>
-                <label for ="initials">Enter initials: </label>
-                <input type = "text" id = "initials">
-                <input type="submit" value="Submit">
-            </div>
-            
-        </form>
-        <section class = "result" id = "quizResult"></section>
+    <div class="quizboard">
+        <header id="header-section">
+            <a href="high-scores.html"> View high scores</a>
+            <output id="timer">Time: 0</output>
+        </header>
+        <main>
+            <section class="instruction" id="instruction-section">
+                <h1>Coding Quiz Challenge</h1>
+                <p>Try to answer the following code-related questions within the time limit.<br>
+                    Keep in mind that incorrect answers will penalize your score/time<br> by ten seconds!</p>
+                <button type="button" onclick="startQuiz()">Start Quiz</button>
+            </section>
 
-        
+            <section class="question" id="question-section"></section>
+
+            <section class="tally" id="tally-section" hidden>
+                <h1>All done!</h1>
+                <p>Your final score is: <output id="score"> </output>.</p>
+                <div>
+                    <label for="initials">Enter initials: </label>
+                    <input type="text" id="initials">
+                    <input type="submit" value="Submit" onclick="submitHighScore()" onsubmit="validateInitials()">
+                </div>
+                <p class=" apply-shake" id="error">Error: Invalid user Initials</p>
+            </section>
+
+            <section class="leaderboard" id="leaderboard-section" hidden>
+                <h1>High scores</h1>
+                <div>
+                    <textarea id="high-score" readonly></textarea>
+                    <div class="button-wrapper">
+                        <button type="button" onclick="history.back()">Go back </button>
+                        <button type="button" onclick="clearHighScores()"> Clear high scores</button>
+                    </div>
+                </div>
+            </section>
+
+            <section class="result" id="result-section" hidden></section>
 
 
-    </main>
-</div>
+
+
+        </main>
+    </div>
     <script type="text/javascript" src="./src/script/script.js"></script>
 </body>
 
