@@ -10,14 +10,14 @@ header{
 .quizboard{
     font-size: clamp(0.8rem, calc(1vw + 0.5rem), 1.3rem);
     box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
-    max-width: 64rem;
+    max-width: 65rem;
     min-height: 38rem;
     margin-inline: auto;
     border: 1px solid black;
-    padding-inline: 2rem;
-    padding-block: 1rem;
+    padding-inline: 2em;
+    padding-block: 1em;
     border-radius: 0.3rem;
-    margin-block: 3rem;
+    margin-block: 3em;
     background-color: rgb(240, 240, 240);
     
 }
@@ -30,7 +30,7 @@ main{
     text-align: center;
 }
 button, .button, input[type="submit"]{
-    font-size: 1.5rem;
+    font-size: 1em;
     background-color: rgb(138, 43, 227);
     color: #fff;
     border-radius: 0.3rem;
@@ -103,11 +103,12 @@ button:hover, .button:hover, input[type="submit"]:hover{
     display: inline-block;
 }
 .leaderboard textarea{
-    font-size: 0.8em;
+    font-size: 1em;
     margin-inline: 0;
-    padding-inline: 0.5em;
-    min-height: 10em;
-
+    padding-inline: 1em;
+    min-height: 15em;
+    padding-block: 1em;
+    font-family: monospace;
 }
 
 a{
@@ -140,8 +141,23 @@ https://teamtreehouse.com/community/shake-effect-with-javascript-only
   */
   .apply-shake {
       animation: shake 0.82s cubic-bezier(.36,.07,.19,.97) both;
-      font-size: 0.8em;
-      color: red;
-      font-style: italic;
-      display: none;
   }
+
+  .error{
+    color: red;
+    display: none;
+  }
+  .guide{
+    margin-top: -0.05em;
+    font-size: 0.8em;
+    font-style: italic;
+    padding-left: 8em;
+    opacity: 0.5;
+  }
+
+@media screen and (max-width: 768px){ 
+    main{
+        margin-left: 0;
+        padding-left: 0;
+    }
+}

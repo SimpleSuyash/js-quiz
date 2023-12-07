@@ -13,7 +13,7 @@
 <body>
     <div class="quizboard">
         <header id="header-section">
-            <a href="high-scores.html"> View high scores</a>
+            <a href="#" onclick ="showLeaderboard(true)"> View high scores</a>
             <output id="timer">Time: 0</output>
         </header>
         <main>
@@ -26,7 +26,7 @@
 
             <section class="question" id="question-section"></section>
 
-            <section class="tally" id="tally-section" hidden>
+            <section class="tally" id="tally-section">
                 <h1>All done!</h1>
                 <p>Your final score is: <output id="score"> </output>.</p>
                 <div>
@@ -34,21 +34,23 @@
                     <input type="text" id="initials">
                     <input type="submit" value="Submit" onclick="submitHighScore()" onsubmit="validateInitials()">
                 </div>
-                <p class=" apply-shake" id="error">Error: Invalid user Initials</p>
+                <p class=" apply-shake error guide" id="error">Error: Invalid user Initials</p>
+                <p class = "guide" id = "initials-guide">Please enter two letter initials like 'SM'</p>
             </section>
 
-            <section class="leaderboard" id="leaderboard-section" hidden>
+            <section class="leaderboard" id="leaderboard-section" >
                 <h1>High scores</h1>
                 <div>
                     <textarea id="high-score" readonly></textarea>
                     <div class="button-wrapper">
-                        <button type="button" onclick="history.back()">Go back </button>
+                        <!-- <button type="button" onclick="history.back()">Go back </button> -->
+                        <button type="button" onclick="goBack()">Go back </button>
                         <button type="button" onclick="clearHighScores()"> Clear high scores</button>
                     </div>
                 </div>
             </section>
 
-            <section class="result" id="result-section" hidden></section>
+            <section class="result" id="result-section"></section>
 
 
 
