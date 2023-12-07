@@ -38,12 +38,18 @@ const timer = get("timer");
 const score = get("score");
 const initial = get("initials");
 const error = get("error");
+const guide = get("initials-guide");
 const highScore = get("high-score");
 
+
+
 let timeLeft = 15 * questions.length; //75seconds
-let timerInterval;
 let currentQuestionNum = 0;
+let theInterval;
 let intervalPaused = false;
+let scoreSubmitted = false;
+let offSwitch, onSwitch;
+
 
 /* 
  section to hide and show are:
@@ -55,42 +61,32 @@ let intervalPaused = false;
  leaderboardSection
 
 */
-let toBeHiddenElements =[];
-let toBeVisibleElements = [];
-
-// let highScores = [];
 
 
-
-
-window.onload = function (){
-    toBeHiddenElements =[questionSection, resultSection, resultSection , tallySection, leaderboardSection ];
-    toBeVisibleElements =[headerSection, instructionSection];
-    showThese(toBeVisibleElements);
-    hideThese(toBeHiddenElements);
+window.onload = function () {
+    showInstruction();
 };
 
-function create(createMe, type = ""){
-    if(type == "node"){
+function create(createMe, type = "") {
+    if (type == "node") {
         return document.createTextNode(createMe);
-    }else{
+    } else {
         return document.createElement(createMe);
     }
 }
-function get(id){
+function get(id) {
     return document.getElementById(id);
 }
 
-function display(element, toDisplay = true){
-    if(toDisplay){
+function display(element, toDisplay = true) {
+    if (toDisplay) {
         element.style.display = "block";
-    }else{
+    } else {
         element.style.display = "none";
     }
 }
 
 function showThese(theArray) {
-    // alert("cheking");
     for (let element of theArray) {
         display(element);
     }
@@ -100,33 +96,93 @@ function hideThese(theArray) {
         display(element, false);
     }
 }
-function startQuiz() {
-    beginInterval();
-    showQuestions();
- 
-    toBeHiddenElements =[instructionSection, resultSection , tallySection, leaderboardSection ];
-    toBeVisibleElements =[headerSection, questionSection];
-    showThese(toBeVisibleElements);
-    hideThese(toBeHiddenElements);
-    // display(instructionSection, false);
+
+function toggleContainers() {
+
+    if (onSwitch == "HI") {
+        showThese([headerSection, instructionSection]);
+        hideThese([questionSection, resultSection, tallySection, leaderboardSection]);
+    } else if (onSwitch == "HQ") {
+        showThese([headerSection, questionSection]);
+        hideThese([instructionSection, resultSection, tallySection, leaderboardSection]);
+    } else if (onSwitch == "HT") {
+        showThese([headerSection, tallySection]);
+        hideThese([instructionSection, questionSection, leaderboardSection]);
+    } else if (onSwitch == "L") {
+        showThese([leaderboardSection]);
+        hideThese([headerSection, instructionSection, questionSection, resultSection, tallySection]);
+    }
+
 }
 
-function showQuestions() {
+function theTimer() {
+    if (!intervalPaused) {
+        timeLeft--;
+    }
+
+    if (timeLeft <= 0) {
+        timeLeft = 0;
+        stopInterval();
+        showTally();
+    }
+    timer.innerText = "Time: " + timeLeft;
+
+}
+function stopInterval() {
+    setTimeout(() => clearInterval(theInterval), 1000);
+    // clearInterval(theInterval);
+}
+function resumeInterval() {
+    intervalPaused = false;
+}
+function pauseInterval() {
+    intervalPaused = true;
+}
+
+function showInstruction() {
+
+    offSwitch = onSwitch;
+    onSwitch = "HI";
+    toggleContainers();
+    timer.value = "Time: 0";
+    reset();
+
+}
+function reset() {
+    timeLeft = 15 * questions.length; //75seconds
+    currentQuestionNum = 0;
+    intervalPaused = false;
+    scoreSubmitted = false;
+}
+function startQuiz() {
+    scoreSubmitted = false;
+    offSwitch = onSwitch;
+    onSwitch = "HQ";
+    toggleContainers();
+    // timeLeft = 15 * questions.length;
+    if (!intervalPaused) {
+        theInterval = setInterval(theTimer, 1000);
+    } else {
+        resumeInterval();
+    }
+    showQuestion();
+}
+
+function showQuestion() {
     let paragraph, div;
     //starts from question number 1
     currentQuestionNum++;
-    
-    
+
     paragraph = create("p");
     div = create("div");
     div.className = "optionsWrapper";
 
     for (let i = 0; i <= questions.length; i++) {
         //question number begins from 1
-        if (currentQuestionNum == (i+1)) {
+        if (currentQuestionNum == (i + 1)) {
             paragraph.innerText = questions[i].question;
             //make questionSection empty before showing new question
-            if(questionSection.innerHTML!=""){
+            if (questionSection.innerHTML != "") {
                 questionSection.innerText = "";
             }
             questionSection.appendChild(paragraph);
@@ -136,7 +192,7 @@ function showQuestions() {
             for (let j in questions[i].options) {
                 let button;
                 button = create("a");
-                button.className ="button";
+                button.className = "button";
                 /*
                 button are named like : 1. option A
                 */
@@ -144,9 +200,8 @@ function showQuestions() {
                 div.appendChild(button);
                 button.addEventListener("click", () => {
                     let answerChosen = button.innerText;
-                    
-                    display(resultSection);
-                    setTimeout( () => display(resultSection, false), 50000);
+
+                    setTimeout(() => display(resultSection, false), 3000);
                     showResult(answerChosen);
                     showNextQuestion();
                 });
@@ -157,137 +212,182 @@ function showQuestions() {
         }
     }
 }
-function showNextQuestion(){
-    if(currentQuestionNum < questions.length){
-        showQuestions();
-    }else{
+function showNextQuestion() {
+    if (currentQuestionNum < questions.length) {
+        showQuestion();
+    } else {
+        stopInterval();
         showTally();
     }
 }
-function beginInterval() {
-    timerInterval = setInterval(function(){
-        if(!intervalPaused){
-            timeLeft--;
-        }
-        if( timeLeft <= 0){
-            timeLeft = 0;
-            showTally();
-        }
-        timer.innerText = "Time: " + timeLeft;
-    }, 1000);
-}
-function stopInterval(){
-    clearInterval(timerInterval);
-}
 
-
-function resumeInterval(){
-    intervalPaused = false;
-}
-
-function pauseInterval(){
-    intervalPaused = true;
-}
-   
-
-
-function showResult(string){
+function showResult(string) {
     let result;
-    let correctAnswer = questions[currentQuestionNum -1].answer;
-    if(string.includes(correctAnswer)){
-        //alert(string + " contains " + correctAnswer);
-        result = create("Correct!" , "node");
-    }else{
-        //alert(string + " doesn't contain " + correctAnswer);
+    let correctAnswer = questions[currentQuestionNum - 1].answer;
+    if (string.includes(correctAnswer)) {
+        result = create("Correct!", "node");
+    } else {
         result = create("Wrong!", "node");
         timeLeft = timeLeft - 15;
     }
     resultSection.innerText = "";
     resultSection.appendChild(result);
+    display(resultSection);
 }
 
 
-function showTally(){
+function showTally() {
 
-    toBeHiddenElements =[instructionSection, questionSection, resultSection , leaderboardSection ];
-    toBeVisibleElements =[headerSection, tallySection];
-    showThese(toBeVisibleElements);
-    hideThese(toBeHiddenElements);
+    offSwitch = onSwitch;
+    onSwitch = "HT";
+    toggleContainers();
 
-    stopInterval();
-    //setTimeout(() => stopCountDown(), 1000);
-     if (timeLeft <= 0){
+    if (timeLeft <= 0) {
         score.innerText = 0;
-    }else {
-        score.innerText = timeLeft;
+    } else {
+        score.innerText = timeLeft - 1;
     }
+
+    setTimeout(() => stopInterval(), 1000);
+    // score.innerText = timeLeft;
+    // setTimeout(() => stopInterval(), 1000);
+    initial.focus();
+    initial.value = "";
 }
 
 
 function submitHighScore() {
 
     let newScore = score.value;
-    
     let newUser = initial.value;
-    if(validateInitials(newUser)){
-        display(error, false);
-        if (localStorage.length > 0) {
-            for (let i = 0; i < localStorage.length; i++) {
-                let aKey = localStorage.key(i);
-                if (newUser === aKey) {
-                    //when current user is already saved
-                    //and his current score is higer, update the score
-                    if (newScore > localStorage.getItem(aKey)) {
-                        localStorage.setItem(aKey, newScore);
-                    }
-                } else {
-                    //when the current user is not found in the record
-                    //it must be new, so add it
-                    localStorage.setItem(newUser, newScore);
-                }
-                break;
-            }
-    
-        } else {//if localStorage is empty, just add the item
-            localStorage.setItem(newUser, newScore);
-        }
+
+
+    if (validateInitials(newUser)) {
+        setLocalStorageData(newUser, newScore);
         showLeaderboard();
-    }else{
-        initial.value = "";
+        scoreSubmitted = true;
+    } else {//initials validation fails
         display(error);
-        setTimeout( () => display(error, false), 1000);
+        display(guide, false);
+        setTimeout(() => display(error, false), 1000);
+        setTimeout(() => display(guide), 1000);
     }
-}
-function validateInitials(initial){
-    let regex = /^[a-zA-Z]+$/; 
-    
-    if(initial.trim().length == 0){
-        return false;
-    }else if(!regex.test(initial)){
-        return false;
-    }else{
-        return true;
-    }
-    
 }
 
-function clearHighScores(){
+function setLocalStorageData(newUser, newScore) {
+    let newUserExist = false;
+    if (localStorage.length > 0) {
+        //when the current user is found in the record
+        //check if his current score is higher than on the record
+        //if so add the new score, if not just ignore 
+        for (let j = 0; j < localStorage.length; j++) {
+            let anUser = localStorage.key(j);
+            let aScore = localStorage.getItem(anUser);
+            // alert (aScore);
+            // console.log("local storage: " + anUser + " " + aScore);
+            // console.log("is new user " + newUser + " is == " + anUser + "? " + (newUser == anUser));
+            if (newUser == anUser) {
+                newUserExist = true;
+                if (newScore > aScore) {
+                    // console.log (newScore + " is > " + aScore + " ? " +newScore >aScore);
+                    localStorage.setItem(newUser, newScore);
+                } else {
+                    //do nothing
+                    //user new score is less than his previous score on record
+                }
+            }
+        }
+        // console.log(newUser + " exist? " + newUserExist);
+        //when the current user is not found in the record
+        //it must be new, so add it
+        if (!newUserExist) {
+            localStorage.setItem(newUser, newScore);
+        }
+    } else {//if localStorage is empty, just add the item
+        localStorage.setItem(newUser, newScore);
+    }
+}
+
+function validateInitials(initial) {
+    let regex = /^[a-zA-Z]{2}$/;
+    if (initial.trim().length == 0) {
+        return false;
+    } else if (!regex.test(initial)) {
+        return false;
+    } else {
+        return true;
+    }
+}
+
+
+function showLeaderboard(paused = false) {
+
+    offSwitch = onSwitch;
+    onSwitch = "L";
+    toggleContainers();
+
+    /*
+        When user wants to see the leaderboard before finishing the quiz
+        if timer is needed to be paused, pause the timer
+        if paused argument is supplied
+    */
+    if (paused) {
+        pauseInterval();
+    } else {
+        // resumeInterval();
+    }
+    highScore.value = getLocalStorageData();
+}
+
+function getLocalStorageData() {
+    let text = "";
+    let obj;
+    let highestScores = [];
+    for (let i = 0; i < localStorage.length; i++) {
+        let aKey = localStorage.key(i);
+        let aValue = localStorage.getItem(aKey);
+        obj = { initial: aKey, score: aValue };
+        highestScores.push(obj);
+    }
+    highestScores.sort((obj1, obj2) => obj2.score - obj1.score);
+    for (let i = 0; i < highestScores.length; i++) {
+        let item = highestScores[i];
+        text += prepend(i + 1) + ". " + item.initial.toUpperCase() + " - " + prepend(item.score) + "\n";
+    }
+    return text;
+}
+
+
+function prepend(num) {
+    return String(num).padStart(2, "0");
+}
+
+function clearHighScores() {
     localStorage.clear();
     showLeaderboard();
 }
 
-function showLeaderboard(){
-    toBeHiddenElements =[instructionSection, headerSection, questionSection, resultSection , tallySection ];
-    toBeVisibleElements =[leaderboardSection];
-    showThese(toBeVisibleElements);
-    hideThese(toBeHiddenElements);
 
-    let text="";
-    for (let i = 0; i < localStorage.length; i++){
-        let aKey = localStorage.key(i);
-        let aValue = localStorage.getItem(aKey);
-        text += (i + 1) + ". " + aKey + " - " + aValue + "\n"; 
+function goBack() {
+
+    if ((offSwitch == "HI")) {
+        showInstruction();
+    } else if ((offSwitch == "HQ")) {
+        //to get correct current question number
+        //have to decrease by 1
+        //because startQuiz function will increase by 1
+        --currentQuestionNum;
+        startQuiz();
+        //score not submitted yet, so back to tally 
+    } else if ((offSwitch == "HT") && !scoreSubmitted) {
+        showTally();
+        //score submitted, so back to start instead of tally
+    } else if ((offSwitch == "HT") && scoreSubmitted) {
+        showInstruction();
+        // scoreSubmitted=false;
     }
-    highScore.value = text.toUpperCase();
+
 }
+
+
 
