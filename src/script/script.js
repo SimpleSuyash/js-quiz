@@ -97,7 +97,7 @@ function hideThese(theArray) {
     }
 }
 
-function toggleContainers() {
+function renderSections() {
 
     if (onSwitch == "HI") {
         showThese([headerSection, instructionSection]);
@@ -143,7 +143,7 @@ function showInstruction() {
 
     offSwitch = onSwitch;
     onSwitch = "HI";
-    toggleContainers();
+    renderSections();
     timer.value = "Time: 0";
     reset();
 
@@ -158,7 +158,7 @@ function startQuiz() {
     scoreSubmitted = false;
     offSwitch = onSwitch;
     onSwitch = "HQ";
-    toggleContainers();
+    renderSections();
     // timeLeft = 15 * questions.length;
     if (!intervalPaused) {
         theInterval = setInterval(theTimer, 1000);
@@ -240,7 +240,7 @@ function showTally() {
 
     offSwitch = onSwitch;
     onSwitch = "HT";
-    toggleContainers();
+    renderSections();
 
     if (timeLeft <= 0) {
         score.innerText = 0;
@@ -324,7 +324,7 @@ function showLeaderboard(paused = false) {
 
     offSwitch = onSwitch;
     onSwitch = "L";
-    toggleContainers();
+    renderSections();
 
     /*
         When user wants to see the leaderboard before finishing the quiz
