@@ -148,7 +148,7 @@ https://teamtreehouse.com/community/shake-effect-with-javascript-only
     display: none;
   }
   .guide{
-    margin-top: -0.05em;
+    margin-top: 0;
     font-size: 0.8em;
     font-style: italic;
     padding-left: 8em;

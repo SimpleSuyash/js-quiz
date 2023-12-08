@@ -6,8 +6,8 @@ const q1 = {
 };
 const q2 = {
     question: "The condition in an if/else statement is enclosed with _____.",
-    options: ["quotes", "curly brackets", "parenthesis", "square brackets"],
-    answer: "curly brackets",
+    options: ["quotes", "curly brackets", "parentheses", "square brackets"],
+    answer: "parentheses",
 };
 const q3 = {
     question: "Always in JavaScript can be used to store _____.",
@@ -16,7 +16,7 @@ const q3 = {
 };
 const q4 = {
     question: "String valuse must be enclosed within _____ when being assigned to variables.",
-    options: ["commas", "curly brackets", "quotes", "parenthesis"],
+    options: ["commas", "curly brackets", "quotes", "parentheses"],
     answer: "quotes",
 };
 const q5 = {
@@ -48,7 +48,8 @@ let currentQuestionNum = 0;
 let theInterval;
 let intervalPaused = false;
 let scoreSubmitted = false;
-let offSwitch, onSwitch;
+let hideCode = "";
+let displayCode = "";
 
 
 /* 
@@ -67,17 +68,43 @@ window.onload = function () {
     showInstruction();
 };
 
-function create(createMe, type = "") {
-    if (type == "node") {
-        return document.createTextNode(createMe);
-    } else {
-        return document.createElement(createMe);
-    }
-}
+//this retrieves the dom element
 function get(id) {
     return document.getElementById(id);
 }
 
+//this conditions decide which dom sections to hide and show
+function renderSections() {
+    if (displayCode === "HI") {
+        showThese([headerSection, instructionSection]);
+        hideThese([questionSection, resultSection, tallySection, leaderboardSection]);
+    } else if (displayCode === "HQ") {
+        showThese([headerSection, questionSection]);
+        hideThese([instructionSection, resultSection, tallySection, leaderboardSection]);
+    } else if (displayCode === "HT") {
+        showThese([headerSection, tallySection]);
+        hideThese([instructionSection, questionSection, leaderboardSection]);
+    } else if (displayCode === "L") {
+        showThese([leaderboardSection]);
+        hideThese([headerSection, instructionSection, questionSection, resultSection, tallySection]);
+    }
+}
+
+//it will make sections visible
+function showThese(theArray) {
+    for (let element of theArray) {
+        display(element);
+    }
+}
+
+//it will make sections hide
+function hideThese(theArray) {
+    for (let element of theArray) {
+        display(element, false);
+    }
+}
+
+//it will make the dom element hide and show
 function display(element, toDisplay = true) {
     if (toDisplay) {
         element.style.display = "block";
@@ -86,68 +113,21 @@ function display(element, toDisplay = true) {
     }
 }
 
-function showThese(theArray) {
-    for (let element of theArray) {
-        display(element);
-    }
-}
-function hideThese(theArray) {
-    for (let element of theArray) {
-        display(element, false);
-    }
-}
-
-function renderSections() {
-
-    if (onSwitch == "HI") {
-        showThese([headerSection, instructionSection]);
-        hideThese([questionSection, resultSection, tallySection, leaderboardSection]);
-    } else if (onSwitch == "HQ") {
-        showThese([headerSection, questionSection]);
-        hideThese([instructionSection, resultSection, tallySection, leaderboardSection]);
-    } else if (onSwitch == "HT") {
-        showThese([headerSection, tallySection]);
-        hideThese([instructionSection, questionSection, leaderboardSection]);
-    } else if (onSwitch == "L") {
-        showThese([leaderboardSection]);
-        hideThese([headerSection, instructionSection, questionSection, resultSection, tallySection]);
-    }
-
-}
-
-function theTimer() {
-    if (!intervalPaused) {
-        timeLeft--;
-    }
-
-    if (timeLeft <= 0) {
-        timeLeft = 0;
-        stopInterval();
-        showTally();
-    }
-    timer.innerText = "Time: " + timeLeft;
-
-}
-function stopInterval() {
-    setTimeout(() => clearInterval(theInterval), 1000);
-    // clearInterval(theInterval);
-}
-function resumeInterval() {
-    intervalPaused = false;
-}
-function pauseInterval() {
-    intervalPaused = true;
-}
-
+/*
+this will show the welcome/instruction/start page
+hideCode =  sections to be hidden
+displayCode = sections to be visible
+change hide code to previous display code to keep track of previous page
+change display code to match the section to be visible
+then renderSections will get the corresponding dom elements to be visible
+*/
 function showInstruction() {
-
-    offSwitch = onSwitch;
-    onSwitch = "HI";
+    hideCode = displayCode;
+    displayCode = "HI";
     renderSections();
-    timer.value = "Time: 0";
     reset();
-
 }
+
 function reset() {
     timeLeft = 15 * questions.length; //75seconds
     currentQuestionNum = 0;
@@ -155,104 +135,166 @@ function reset() {
     scoreSubmitted = false;
 }
 function startQuiz() {
-    scoreSubmitted = false;
-    offSwitch = onSwitch;
-    onSwitch = "HQ";
+    hideCode = displayCode;
+    displayCode = "HQ";
     renderSections();
-    // timeLeft = 15 * questions.length;
+    /*when the quiz is started initially, 
+    time interval is not paused.
+    And so start the time interval every 1sec
+    */
     if (!intervalPaused) {
         theInterval = setInterval(theTimer, 1000);
     } else {
+        //if time interval is paused, start it again to resume quiz
         resumeInterval();
     }
+    //show time left until the quiz finish
+    timer.innerText = "Time: " + timeLeft;
+    //now show the question
     showQuestion();
+}
+function theTimer() {
+    if (!intervalPaused) {
+        //timer reduces time by 1sec every sec
+        timeLeft--;
+    }
+    /*
+    when the time left becomes -ve value due to penalty,
+    reset it  to 0.
+    stop the timer, and show the tally 
+    */
+    if (timeLeft < 0) {
+        timeLeft = 0;
+        stopInterval();
+        //shows how much user scored
+        showTally();
+    }
+    timer.innerText = "Time: " + timeLeft;
+}
+//stops the interval
+function stopInterval() {
+    clearInterval(theInterval);
+}
+//resumes the interval
+function resumeInterval() {
+    intervalPaused = false;
+}
+//pauses the interval
+function pauseInterval() {
+    intervalPaused = true;
 }
 
 function showQuestion() {
     let paragraph, div;
-    //starts from question number 1
+    //before quiz start, currentQuestionNum = 0
+    //quiz starts from question number 1
+    //to show a question everytime, increase the question number
     currentQuestionNum++;
-
+    //create paragraph element for the question
     paragraph = create("p");
+    //create wrapper for the option buttons
     div = create("div");
+    //assign class name to give it style
     div.className = "optionsWrapper";
 
-    for (let i = 0; i <= questions.length; i++) {
-        //question number begins from 1
-        if (currentQuestionNum == (i + 1)) {
-            paragraph.innerText = questions[i].question;
-            //make questionSection empty before showing new question
-            if (questionSection.innerHTML != "") {
-                questionSection.innerText = "";
-            }
-            questionSection.appendChild(paragraph);
-            questionSection.appendChild(div);
+    paragraph.innerText = questions[currentQuestionNum - 1].question;
+    //make questionSection empty before showing new question
+    if (questionSection.innerHTML != "") {
+        questionSection.innerHTML = "";
+    }
+    questionSection.appendChild(paragraph);
+    questionSection.appendChild(div);
 
-            //getting possible answers to the question
-            for (let j in questions[i].options) {
-                let button;
-                button = create("a");
-                button.className = "button";
-                /*
-                button are named like : 1. option A
-                */
-                button.innerText = (++j) + ". " + questions[i].options[--j];
-                div.appendChild(button);
-                button.addEventListener("click", () => {
-                    let answerChosen = button.innerText;
-
-                    setTimeout(() => display(resultSection, false), 3000);
-                    showResult(answerChosen);
-                    showNextQuestion();
-                });
-            }
-            // if we find a match already, don't loop
-            //there is only one match at a time
-            break;
-        }
+    //getting possible answers to the question
+    for (let j in questions[currentQuestionNum - 1].options) {
+        let button;
+        button = create("a");
+        button.className = "button";
+        /*
+        button are named like : 1. optionA
+        */
+        button.innerText = (++j) + ". " + questions[currentQuestionNum - 1].options[--j];
+        div.appendChild(button);
+        
+        //adding click event to the buttons
+        button.addEventListener("click", () => {
+            //getting the text/value of the button clicked
+            let answerChosen = button.innerText;
+            //getting the result
+            showResult(answerChosen);
+            //hide the result after 2sec
+            setTimeout(() => display(resultSection, false), 2000);
+            //getting next question
+            showNextQuestion();
+        });
     }
 }
-function showNextQuestion() {
-    if (currentQuestionNum < questions.length) {
-        showQuestion();
-    } else {
-        stopInterval();
-        showTally();
+
+//creates the text node or element node
+function create(createMe, type = "") {
+    if (type === "node") {
+        return document.createTextNode(createMe);
+    } else {//when type none is "" 
+        return document.createElement(createMe);
     }
 }
 
 function showResult(string) {
     let result;
     let correctAnswer = questions[currentQuestionNum - 1].answer;
+    //when given string includes the correctAnswer
     if (string.includes(correctAnswer)) {
+        //create a 'correct' textnode
         result = create("Correct!", "node");
     } else {
+        //create a 'wrong' textnode
         result = create("Wrong!", "node");
-        timeLeft = timeLeft - 15;
+        //if wrong answer, apply penalty of 15 secs
+        timeLeft -= 15;
+        //if timeLeft is minus value, make it 0;
+        if(timeLeft < 0){
+            timeLeft = 0;
+        }
+        //display the new time
+        timer.innerText = "Time: " + timeLeft;
     }
+    //clear the result from b4, if any
     resultSection.innerText = "";
+    //write the result to the element
     resultSection.appendChild(result);
+    //show the result
     display(resultSection);
 }
 
+//gets the next question
+function showNextQuestion() {
 
+    //until q4, show next question
+    if (currentQuestionNum < questions.length) {
+        showQuestion();
+    } else {
+        //at q5, stop the interval and show the score
+        stopInterval();
+        showTally();
+    }
+}
+
+// show the current game's result
 function showTally() {
-
-    offSwitch = onSwitch;
-    onSwitch = "HT";
+    hideCode = displayCode;
+    displayCode = "HT";
     renderSections();
 
-    if (timeLeft <= 0) {
+    if (timeLeft < 0) {
         score.innerText = 0;
     } else {
-        score.innerText = timeLeft - 1;
+        score.innerText = timeLeft;
     }
-
-    setTimeout(() => stopInterval(), 1000);
-    // score.innerText = timeLeft;
-    // setTimeout(() => stopInterval(), 1000);
-    initial.focus();
+    //clear the previously entered initial in the input box
+    //place cursor in textbox for initials
     initial.value = "";
+    initial.focus();
+    
 }
 
 
@@ -322,8 +364,8 @@ function validateInitials(initial) {
 
 function showLeaderboard(paused = false) {
 
-    offSwitch = onSwitch;
-    onSwitch = "L";
+    hideCode = displayCode;
+    displayCode = "L";
     renderSections();
 
     /*
@@ -370,19 +412,19 @@ function clearHighScores() {
 
 function goBack() {
 
-    if ((offSwitch == "HI")) {
+    if ((hideCode === "HI")) {
         showInstruction();
-    } else if ((offSwitch == "HQ")) {
+    } else if ((hideCode === "HQ")) {
         //to get correct current question number
         //have to decrease by 1
         //because startQuiz function will increase by 1
         --currentQuestionNum;
         startQuiz();
         //score not submitted yet, so back to tally 
-    } else if ((offSwitch == "HT") && !scoreSubmitted) {
+    } else if ((hideCode === "HT") && !scoreSubmitted) {
         showTally();
         //score submitted, so back to start instead of tally
-    } else if ((offSwitch == "HT") && scoreSubmitted) {
+    } else if ((hideCode === "HT") && scoreSubmitted) {
         showInstruction();
         // scoreSubmitted=false;
     }
