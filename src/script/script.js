@@ -40,6 +40,7 @@ const initial = get("initials");
 const error = get("error");
 const guide = get("initials-guide");
 const highScore = get("high-score");
+const orderList =get("order-list");
 
 
 
@@ -397,16 +398,16 @@ function showLeaderboard(paused = false) {
 function getLocalStorageData() {
     //let text = "";
     let obj;
-    let highestScores = [];
+    let highestScores = [];//making an array so we can sort the data
     for (let i = 0; i < localStorage.length; i++) {
         let aKey = localStorage.key(i);
         let aValue = localStorage.getItem(aKey);
         obj = { initial: aKey, score: aValue };
-        highestScores.push(obj);
+        highestScores.push(obj);//saving to array
     }
+    //sorting data by score in descending order
     highestScores.sort((obj1, obj2) => obj2.score - obj1.score);
-    let orderList = create("ol");
-    
+    orderList.innerHTML = "";
     for (let i = 0; i < highestScores.length; i++) {
         let item = highestScores[i];
         let listItem = create("li");
@@ -426,7 +427,8 @@ function prepend(num) {
 function clearHighScores() {
     //deletes the local storage saved data
     localStorage.clear();
-    showLeaderboard();
+    //now show the empty list
+    orderList.innerHTML = "";
 }
 
 
