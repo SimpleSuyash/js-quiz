@@ -93,7 +93,7 @@ button:hover, .button:hover, input[type="submit"]:hover{
 }
 
 
-.leaderboard div{
+.leaderboard>div{
     display: flex;
     flex-direction: column;
     row-gap: 0.5em;
@@ -102,14 +102,24 @@ button:hover, .button:hover, input[type="submit"]:hover{
 .leaderboard .button-wrapper{
     display: inline-block;
 }
-.leaderboard textarea{
+.leaderboard ol{
     font-size: 1em;
-    margin-inline: 0;
-    padding-inline: 1em;
-    min-height: 15em;
-    padding-block: 1em;
+    padding-inline: 0;
     font-family: monospace;
+    /* list-style-type: decimal-leading-zero; */
+    list-style-type: none;
 }
+.leaderboard li:nth-child(odd){
+    background:rgb(255, 255, 221);
+}
+.leaderboard li:nth-child(even){
+    background:rgba(55, 55, 21,0.2);
+}
+.leaderboard li{
+    padding-inline: 0.5em;
+    padding-block: 0.2em;
+}
+
 
 a{
     color:rgb(138, 43, 227);
