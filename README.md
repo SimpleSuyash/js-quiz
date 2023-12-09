@@ -11,7 +11,7 @@ Screenshot showing the landing /instruction page
 ![image](./assets/image/landing-page.png)
 
 Pressing the '*Start Quiz*' button starts the quiz. As soon as the quiz starts, the timer is started with 75 seconds limit and will reduce by a second per second.
-Only one question is displayed at a time. An user has to click the correct button as his/her answer to the question. As soon as one of the four buttons (possible answers) is pressed, another question is displayed, and underneath it, the feedback/result of the user's response to the previous question is displayed either as '*Right!*' or '*Wrong!*'.
+Only one question is displayed at a time. An user has to click the correct button as his/her answer to the question. As soon as one of the four buttons (possible answers) is pressed, next question is displayed, and underneath it, the feedback/result of the user's response to the previous question is displayed either as '*Right!*' or '*Wrong!*'.
 
  Screenshot showing the start of the Quiz
 ![image](./assets/image/question.png)
