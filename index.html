@@ -30,8 +30,8 @@
                 <h1>All done!</h1>
                 <p>Your final score is: <output id="score"> </output>.</p>
                 <div>
-                    <label for="initials">Enter initials: </label>
-                    <input type="text" id="initials">
+                    <label for="initials" >Enter initials: </label>
+                    <input type="text" id="initials" onkeyup = "enterQuizScore(event)">
                     <input type="submit" value="Submit" onclick="submitHighScore()" onsubmit="validateInitials()">
                 </div>
                 <p class=" apply-shake error guide" id="error">Error: Invalid user Initials</p>
@@ -41,7 +41,10 @@
             <section class="leaderboard" id="leaderboard-section" >
                 <h1>High scores</h1>
                 <div>
-                    <textarea id="high-score" readonly></textarea>
+                    <!-- <textarea id="high-score" readonly></textarea> -->
+                    <div id ="high-score">
+
+                    </div>
                     <div class="button-wrapper">
                         <!-- <button type="button" onclick="history.back()">Go back </button> -->
                         <button type="button" onclick="goBack()">Go back </button>

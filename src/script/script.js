@@ -290,29 +290,54 @@ function showTally() {
     } else {
         score.innerText = timeLeft;
     }
-    //clear the previously entered initial in the input box
+    //clear the previously entered initials in the input box
     //place cursor in textbox for initials
     initial.value = "";
     initial.focus();
-    
+}
+
+//when quiz user press enter key to submit his/her score & initials
+function enterQuizScore(event){
+    if (event.key === "Enter") {
+        submitHighScore();
+    }
 }
 
 
 function submitHighScore() {
-
-    let newScore = score.value;
-    let newUser = initial.value;
-
-
+    // get new score and initials
+    let newScore = score.innerText;
+    let newUser = initial.value.trim();
+    //when user input for initials is validated
     if (validateInitials(newUser)) {
+        //save in the browser localstorage
         setLocalStorageData(newUser, newScore);
+        //show the highest score of all the users
         showLeaderboard();
+        //to keep track of score submitted
         scoreSubmitted = true;
     } else {//initials validation fails
+        //show the error msg and hide initials input guide 
         display(error);
         display(guide, false);
+
+        //show the initials input guide and hide the error msg
         setTimeout(() => display(error, false), 1000);
         setTimeout(() => display(guide), 1000);
+    }
+}
+function validateInitials(initial) {
+    /*
+    validation criteria:
+    a-z and A-z alphabets only, and 
+    two characters only
+    */
+    let regex = /^[a-zA-Z]{2}$/;
+   
+    if (!regex.test(initial)) {
+        return false;
+    } else {
+        return true;
     }
 }
 
@@ -323,15 +348,13 @@ function setLocalStorageData(newUser, newScore) {
         //check if his current score is higher than on the record
         //if so add the new score, if not just ignore 
         for (let j = 0; j < localStorage.length; j++) {
+            //getting values from the localstorage
             let anUser = localStorage.key(j);
             let aScore = localStorage.getItem(anUser);
-            // alert (aScore);
-            // console.log("local storage: " + anUser + " " + aScore);
-            // console.log("is new user " + newUser + " is == " + anUser + "? " + (newUser == anUser));
+            
             if (newUser == anUser) {
                 newUserExist = true;
                 if (newScore > aScore) {
-                    // console.log (newScore + " is > " + aScore + " ? " +newScore >aScore);
                     localStorage.setItem(newUser, newScore);
                 } else {
                     //do nothing
@@ -339,7 +362,6 @@ function setLocalStorageData(newUser, newScore) {
                 }
             }
         }
-        // console.log(newUser + " exist? " + newUserExist);
         //when the current user is not found in the record
         //it must be new, so add it
         if (!newUserExist) {
@@ -350,39 +372,30 @@ function setLocalStorageData(newUser, newScore) {
     }
 }
 
-function validateInitials(initial) {
-    let regex = /^[a-zA-Z]{2}$/;
-    if (initial.trim().length == 0) {
-        return false;
-    } else if (!regex.test(initial)) {
-        return false;
-    } else {
-        return true;
-    }
-}
-
-
+//it shows the highest scores of all individual users
 function showLeaderboard(paused = false) {
-
     hideCode = displayCode;
     displayCode = "L";
     renderSections();
-
     /*
         When user wants to see the leaderboard before finishing the quiz
         if timer is needed to be paused, pause the timer
         if paused argument is supplied
     */
+
+    //when users view high scores in the middle of the quiz
     if (paused) {
         pauseInterval();
     } else {
-        // resumeInterval();
+        // do nothing when user comes to the Leaderboard
+        // from Tally section
     }
-    highScore.value = getLocalStorageData();
+    //highScore.value = getLocalStorageData();
+    highScore.appendChild(getLocalStorageData());
 }
 
 function getLocalStorageData() {
-    let text = "";
+    //let text = "";
     let obj;
     let highestScores = [];
     for (let i = 0; i < localStorage.length; i++) {
@@ -392,26 +405,32 @@ function getLocalStorageData() {
         highestScores.push(obj);
     }
     highestScores.sort((obj1, obj2) => obj2.score - obj1.score);
+    let orderList = create("ol");
+    
     for (let i = 0; i < highestScores.length; i++) {
         let item = highestScores[i];
-        text += prepend(i + 1) + ". " + item.initial.toUpperCase() + " - " + prepend(item.score) + "\n";
+        let listItem = create("li");
+        listItem.innerText =prepend(i + 1) + ". " + item.initial.toUpperCase() + " - " + prepend(item.score);
+        orderList.appendChild(listItem);
+        // text += prepend(i + 1) + ". " + item.initial.toUpperCase() + " - " + prepend(item.score) + "\n";
     }
-    return text;
+    //returns the stored values in the localstorage as an order list
+    return orderList;
 }
 
-
+//format user input number into two digit, leading with 0
 function prepend(num) {
     return String(num).padStart(2, "0");
 }
 
 function clearHighScores() {
+    //deletes the local storage saved data
     localStorage.clear();
     showLeaderboard();
 }
 
 
 function goBack() {
-
     if ((hideCode === "HI")) {
         showInstruction();
     } else if ((hideCode === "HQ")) {
@@ -428,7 +447,6 @@ function goBack() {
         showInstruction();
         // scoreSubmitted=false;
     }
-
 }
 
 
