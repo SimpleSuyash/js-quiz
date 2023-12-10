@@ -43,6 +43,17 @@ All the events triggered by clicking the buttons or pressing the Enter key are, 
 
 All the users' data i.e. initials and scores are directly injected to the local storage, but unfortunately, in the process of learning, at the latter stage of this project, I realized that the local storage is shared by other programs/projects. So simply saving initials and score as the key and value pair is not a good idea. Due to the time limit, I left it as it is, and at this stage, as long as the local storage is not being shared or used by other programs, this program's data retrieving and saving should not be a problem. I highly recommend that the user data is stored in an array of user objects and then JSON stringify applied and saved in the local storage. 
 
+## Acknowledgement
+
+- The string shake animation is copied from the following source:
+    https://teamtreehouse.com/community/shake-effect-with-javascript-only
+- The normaize.css is downloaded from:
+   http://meyerweb.com/eric/tools/css/reset/
+   v2.0 | 20110126
+   License: none (public domain)
+
+
+
 ## Link to deployed application
 [Link to deployed JavaScript coding quiz challenge](https://simplesuyash.github.io/js-quiz/)
 
