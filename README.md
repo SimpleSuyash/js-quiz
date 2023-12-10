@@ -46,8 +46,10 @@ All the users' data i.e. initials and scores are directly injected to the local 
 ## Acknowledgement
 
 - The string shake animation is copied from the following source:
+- 
     https://teamtreehouse.com/community/shake-effect-with-javascript-only
 - The normaize.css is downloaded from:
+  
    http://meyerweb.com/eric/tools/css/reset/
    v2.0 | 20110126
    License: none (public domain)
