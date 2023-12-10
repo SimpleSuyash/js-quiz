@@ -56,7 +56,7 @@ All the users' data i.e. initials and scores are directly injected to the local 
 
 
 
-## Link to deployed application
+## Link to the deployed application
 [Link to deployed JavaScript coding quiz challenge](https://simplesuyash.github.io/js-quiz/)
 
 
