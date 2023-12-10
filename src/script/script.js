@@ -218,9 +218,9 @@ function showQuestion() {
         div.appendChild(button);
         
         //adding click event to the buttons
-        button.addEventListener("click", () => {
+        button.addEventListener("click", (theEvent) => {
             //getting the text/value of the button clicked
-            let answerChosen = button.innerText;
+            let answerChosen = theEvent.currentTarget.innerText;
             //getting the result
             showResult(answerChosen);
             //hide the result after 2sec
