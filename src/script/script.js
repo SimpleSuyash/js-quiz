@@ -127,6 +127,7 @@ function showInstruction() {
     displayCode = "HI";
     renderSections();
     reset();
+    timer.innerText = "Time: 0" ;
 }
 
 function reset() {
